@@ -85,6 +85,9 @@ class Game {
   checkCollision() {
     this.player.nextPosMethod();
     const newArr = [...this.fruitsArr, ...this.obstaclesArr, ...this.player.nodes];
+    if (newArr.length === 597) {
+      this.die();
+    }
     let result;
     if (newArr.some(item => item.x === this.player.nextPos.x && item.y === this.player.nextPos.y)) {
       const idx = newArr.findIndex(item => item.x === this.player.nextPos.x && item.y === this.player.nextPos.y);
@@ -141,16 +144,11 @@ class Game {
     this.cx.restore();
 
     // draw obstacles
-    this.cx.save();
-    this.cx.shadowColor = '#000';
-    this.cx.shadowBlur = 10;
-    this.cx.shadowOffsetX = 0;
-    this.cx.shadowOffsetY = 0;
     this.obstaclesArr.forEach((obstacle) => {
       this.cx.fillStyle = '#fff';
       this.cx.fillRect(obstacle.x, obstacle.y, this.elementsSize, this.elementsSize);
     });
-    this.cx.restore();
+
     // draw snake
 
     // body
@@ -294,9 +292,14 @@ class Game {
     // setTimeout(this.clearCanvas(), 2000);
     this.cx.fillStyle = 'rgba(0, 0, 0, 0.65)';
     this.cx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-    this.cx.font = '50px Verdana';
+    // this.cx.font = '22px Rubik Mono One';
+    this.cx.textAlign = 'center';
+    // this.cx.fillStyle = '#fff';
+    // this.cx.fillText('Player 1', this.canvasWidth / 2, 100);
+    this.cx.font = '30px Rubik Mono One';
     this.cx.fillStyle = '#ffcc00';
-    this.cx.fillText(`Final score: ${this.score}`, this.canvasWidth / 2 - 135, this.canvasHeight / 2 - 25);
+    this.cx.fillText('FINAL SCORE:', this.canvasWidth / 2, this.canvasHeight / 2 - 30);
+    this.cx.fillText(this.score, this.canvasWidth / 2, this.canvasHeight / 2 + 15);
   }
 
   clearCanvas() {
@@ -308,8 +311,8 @@ class Game {
     this.gameOver = true;
     clearInterval(this.update);
     this.draw();
-    // setTimeout(this.clearCanvas(), 20000);
-    setTimeout(this.showGameScore(), 50000);
+    setTimeout(() => this.clearCanvas(), 200);
+    setTimeout(() => this.showGameScore(), 210);
   }
 
   updateCanvas() {

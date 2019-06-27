@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Rubik+Mono+One&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -6,6 +8,12 @@
 
 html, body {
   height: 100%;
+  font-family: 'Rubik Mono One', sans-serif;
+}
+
+
+body {
+  background: #1d1d1d;
 }
 
 #canvas-container {
@@ -13,30 +21,76 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;  
+  position: relative;
 }
 
 canvas {
   /* border: 5px solid darkolivegreen; */
-  margin: 0 10px;
+  margin: 0 1rem;
   background: linear-gradient(rgba(255, 204, 0, .15), rgba(255, 204, 0, .15)), url('../img/grass-bg.jpg');
 }
 
 #score1, #score2 {
-  position: absolute;
-  bottom: 0;
-  width: 100px;
-  text-align: center;
-  margin: 10px;
+  /* position: absolute; */
+  /* bottom: 0; */
+  width: 400px;
+  margin: .5rem 1rem;
+  padding: .8rem;
   background: #000;
   color: #ffcc00;
+  font-size: 1.5rem;
 }
 
-#score1{
-  left: 40%;
-  transform: translateX(-100%);
+.player-container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
 }
 
-#score2{
-  right: 40%;
-  transform: translateX(100%);
+h3 {
+  color: #fff;
+  margin: 0 auto;
+  /* width: 60%; */
+  padding: 1rem 3rem;
+  border: 1px solid #fff;
+  border-bottom: 0;
+  border-radius: 25px 25px 0 0;
+}
+
+#winner-message {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  height: 630px;
+  width: 850px;
+  transform: translateY(-50%);
+  background: #fff;
+  display: none;
+  font-size: 60px;
+  text-align: center;
+}
+
+#winner-message button {
+  padding: .5rem 1rem;
+  font-family: 'Rubik Mono One', sans-serif;
+  border: 1px solid #ffcc00;
+  background: #fff;
+  font-size: 20px;
+  margin-top: 2rem;
+  border-radius: .5rem;
+  transition: .3s ease;
+}
+
+#winner-message button:hover {
+  background: #ffcc00;
+  color: '#fff';
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: .1s ease;
+}
+
+#winner-message button:active, #winner-message button:focus {
+  outline:none;
 }
