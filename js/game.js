@@ -1,3 +1,5 @@
+/* eslint-disable operator-linebreak */
+
 const canvas = document.querySelector('#main-canvas');
 const cx = canvas.getContext('2d');
 const canvasWidth = parseInt(canvas.getAttribute('width'), 10);
@@ -5,7 +7,8 @@ const canvasHeight = parseInt(canvas.getAttribute('height'), 10);
 
 let gameStatus = true;
 
-let containsObstacle;
+let frames = 0;
+
 
 let containsAnythingArr = [];
 let containsAnything;
@@ -15,9 +18,9 @@ let score = 0;
 const snakeSize = 20;
 const fruitSize = 20;
 
-const fruitType = ['grow', 'blink', 'obstacle'];
-let randType;
+const fruitType = ['grow', 'grow', 'obstacle'];
 const fruitsArr = [];
+let randType;
 let randX;
 let randY;
 
@@ -40,10 +43,11 @@ class Fruits {
 class Snake {
   constructor(x, y, direction) {
     this.direction = direction;
+    this.commands = [];
     this.size = [{
       scale: 20,
-      x: x,
-      y: x,
+      x,
+      y,
       lastX: 0,
       lastY: 0,
     }];
@@ -52,6 +56,10 @@ class Snake {
   move() {
     this.size[0].lastX = this.size[0].x;
     this.size[0].lastY = this.size[0].y;
+    if (this.commands.length > 0) {
+      [this.direction] = this.commands;
+      this.commands.shift();
+    }
     switch (this.direction) {
       case 'up':
         this.size[0].y -= 20;
@@ -76,7 +84,7 @@ class Snake {
     if ((this.size[0].x + snakeSize) > canvasWidth) this.size[0].x = 0;
     if (this.size[0].y < 0) this.size[0].y = canvasHeight - snakeSize;
     if ((this.size[0].y + snakeSize) > canvasHeight) this.size[0].y = 0;
-    
+
     if (this.size.length > 1) {
       if (this.size[0].x === this.size[1].x && this.size[0].y === this.size[1].y) {
         this.size[0].x = this.size[1].x;
@@ -91,7 +99,7 @@ class Snake {
       }
     }
 
-    
+
     // this.size.forEach((bodyNode) => {
     //   containsAnythingArr.push([bodyNode.x, bodyNode.y]);
     // });
@@ -102,7 +110,7 @@ class Snake {
     cx.strokeStyle = 'orange';
     cx.fillStyle = 'black';
     for (let i = 1; i < this.size.length; i += 1) {
-      if (i === this.size.length -1) cx.fillStyle = 'darkgreen';
+      if (i === this.size.length - 1) cx.fillStyle = 'darkgreen';
       cx.strokeRect(this.size[i].x, this.size[i].y, snakeSize, snakeSize);
       cx.fillRect(this.size[i].x, this.size[i].y, snakeSize, snakeSize);
     }
@@ -127,7 +135,7 @@ class Snake {
         } else {
           obstaclesArr.push({
             x: fruitsArr[i].x,
-            y: fruitsArr[i].y
+            y: fruitsArr[i].y,
           });
         }
         fruitsArr.splice(i, 1);
@@ -142,10 +150,10 @@ class Snake {
         (this.size[0].x) === obstaclesArr[i].x &&
         this.size[0].y === (obstaclesArr[i].y) &&
         (this.size[0].y) === obstaclesArr[i].y) {
-        this.size.forEach((bodyNode) => {
-          bodyNode.x = bodyNode.lastX;
-          bodyNode.y = bodyNode.lastY;
-        });
+        this.size = this.size.map(bodyNode => ({
+          x: bodyNode.lastX,
+          y: bodyNode.lastY,
+        }));
         this.size[0].x = this.size[0].x;
         this.size[0].y = this.size[0].y;
         gameStatus = !gameStatus;
@@ -169,7 +177,7 @@ class Snake {
   }
 }
 
-// CREATE FRUITS FUNCTION
+// CREATE FRUITS FUNCTION - método do game
 const createFruits = () => {
   // const randomNum = Math.floor(Math.random() * 6) + 4;
   for (let i = 0; i < 6; i += 1) {
@@ -203,7 +211,7 @@ const createFruits = () => {
   });
 };
 
-// DRAW OBSTACLES FUNCTION
+// DRAW OBSTACLES FUNCTION - método do game
 const drawObstacles = () => {
   obstaclesArr.forEach((obstacle) => {
     cx.fillStyle = 'blue';
@@ -211,18 +219,18 @@ const drawObstacles = () => {
   });
 };
 
-// DRAW SCORE
+// DRAW SCORE - método do game
 const drawScore = () => {
   cx.font = '35px Verdana';
   cx.fillStyle = '#ffcc00';
   cx.fillText(`Score: ${score}`, 15, 50);
 };
 
-// DRAW SNAKE AND FRUITS
+// CREATE SNAKE AND FRUITS - método do game / constrói no constructor
 const player1 = new Snake((canvasWidth / 2), (canvasHeight / 2), 'up');
 createFruits();
 
-// PUSH TO CONTAINSANYTHINGARR
+// PUSH TO CONTAINSANYTHINGARR - não precisa, mas seria método do game
 const checkPos = (arr) => {
   arr.forEach((element) => {
     containsAnythingArr.push([element.x, element.y]);
@@ -233,50 +241,58 @@ const checkPosAll = (arr1, arr2, arr3) => {
   checkPos(arr1);
   checkPos(arr2);
   checkPos(arr3);
-}
+};
 
 
 // requestUpdate = window.requestAnimationFrame(updateCanvas);
+// método do game
 const updateCanvas = () => {
   if (gameStatus) {
-    containsAnythingArr = [];
-    cx.clearRect(0, 0, canvasWidth, canvasHeight);
-    player1.eatFruit();
-    drawObstacles();
-    if (fruitsArr.length === 0) {
-      createFruits();
+    frames += 1;
+    if (frames % 5 === 0) {
+      containsAnythingArr = [];
+      cx.clearRect(0, 0, canvasWidth, canvasHeight);
+      player1.eatFruit();
+      drawObstacles();
+      if (fruitsArr.length === 0) {
+        createFruits();
+      }
+      fruitsArr.forEach((fruit) => {
+        if (fruit.type === 'grow') cx.fillStyle = 'lightgreen';
+        if (fruit.type === 'blink') cx.fillStyle = 'orange';
+        if (fruit.type === 'obstacle') cx.fillStyle = 'red';
+        fruit.drawFruit();
+      });
+      player1.move();
+      player1.checkSuicide();
+      player1.checkObstacleHit();
+      cx.fillStyle = 'black';
+      player1.drawSnake();
+      drawScore();
+      checkPosAll(obstaclesArr, fruitsArr, player1.size);
+      // requestUpdate = window.requestAnimationFrame(updateCanvas);
     }
-    fruitsArr.forEach((fruit) => {
-      if (fruit.type === 'grow') cx.fillStyle = 'lightgreen';
-      if (fruit.type === 'blink') cx.fillStyle = 'orange';
-      if (fruit.type === 'obstacle') cx.fillStyle = 'red';
-      fruit.drawFruit();
-    });
-    player1.move();
-    player1.checkSuicide();
-    player1.checkObstacleHit();
-    cx.fillStyle = 'black';
-    player1.drawSnake();
-    drawScore();
-    checkPosAll(obstaclesArr, fruitsArr, player1.size);
-    // requestUpdate = window.requestAnimationFrame(updateCanvas);
   }
 };
 
-// KEYBOARD ACTIONS
+// KEYBOARD ACTIONS - método do game. É um método que recebe um keycode e faz a ação
 document.onkeydown = (e) => {
   switch (e.keyCode) {
     case 38:
-      if (gameStatus) player1.direction = 'up';
+      if (gameStatus) player1.commands.push('up');
+      // if (gameStatus) player1.direction = 'up';
       break;
     case 40:
-      if (gameStatus) player1.direction = 'down';
+      if (gameStatus) player1.commands.push('down');
+      // if (gameStatus) player1.direction = 'down';
       break;
     case 37:
-      if (gameStatus) player1.direction = 'left';
+      if (gameStatus) player1.commands.push('left');
+      // if (gameStatus) player1.direction = 'left';
       break;
     case 39:
-      if (gameStatus) player1.direction = 'right';
+      if (gameStatus) player1.commands.push('right');
+      // if (gameStatus) player1.direction = 'right';
       break;
     case 32:
       gameStatus = !gameStatus;
@@ -287,5 +303,7 @@ document.onkeydown = (e) => {
   }
 };
 
+setInterval(updateCanvas, 16);
 
-setInterval(updateCanvas, 60);
+
+// colocar arrays obstacles e fruits como argumento do método
