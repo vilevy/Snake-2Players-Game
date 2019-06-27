@@ -42,14 +42,13 @@ class Snake {
       default:
         break;
     }
-  }
-
-  setNewPos() {
     if (this.nextPos.x < 0) this.nextPos.x = this.canvasW - this.size;
     if ((this.nextPos.x + this.size) > this.canvasW) this.nextPos.x = 0;
     if (this.nextPos.y < 0) this.nextPos.y = this.canvasH - this.size;
     if ((this.nextPos.y + this.size) > this.canvasH) this.nextPos.y = 0;
+  }
 
+  setNewPos() {
     this.nodes[0].direction.push(this.direction);
     this.nodes[0].type = 'body';
     this.nodes.pop(); // retira o último elemento do array

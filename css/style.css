@@ -16,6 +16,27 @@ html, body {
 }
 
 canvas {
-  border: 5px solid darkolivegreen;
+  /* border: 5px solid darkolivegreen; */
   margin: 0 10px;
+  background: linear-gradient(rgba(255, 204, 0, .15), rgba(255, 204, 0, .15)), url('../img/grass-bg.jpg');
+}
+
+#score1, #score2 {
+  position: absolute;
+  bottom: 0;
+  width: 100px;
+  text-align: center;
+  margin: 10px;
+  background: #000;
+  color: #ffcc00;
+}
+
+#score1{
+  left: 40%;
+  transform: translateX(-100%);
+}
+
+#score2{
+  right: 40%;
+  transform: translateX(100%);
 }
