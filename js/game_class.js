@@ -14,20 +14,23 @@ class Game {
     this.score = 0;
     this.elementsSize = 20;
 
-    
+
     // player elements
     this.player = new Snake((this.canvasWidth / 2), (this.canvasHeight / 2), this.elementsSize, this.canvasWidth, this.canvasHeight);
-    
+
     // fruits elements
     this.fruitsArr = [];
     this.obstaclesArr = [];
     this.maxFruits = 3;
     this.createFruits('good');
-    
+
     // enemy elements
     this.enemyFruitsArr = [];
     this.enemyFruitsCounter = 0;
     this.enemyObstaclesArr = [];
+
+    // this.image = new Image();
+    // this.image.src = './img/straight.png';
 
     // update
     this.update = setInterval(() => {
@@ -123,38 +126,162 @@ class Game {
 
   draw() {
     // draw fruits
-    // this.cx.fillStyle = 'lightgreen';
+    this.cx.save();
+    this.cx.shadowColor = '#000';
+    this.cx.shadowBlur = 10;
+    this.cx.shadowOffsetX = 10;
+    this.cx.shadowOffsetY = 10;
     for (let i = 0; i < this.fruitsArr.length; i += 1) {
-      this.cx.fillStyle = (this.fruitsArr[i].type === 'good') ? 'lightgreen' : 'red';
-      this.cx.fillRect(this.fruitsArr[i].x, this.fruitsArr[i].y, 20, 20);
+      const fruitImg = new Image();
+      fruitImg.src = (this.fruitsArr[i].type === 'good') ? 'img/watermelon.png' : 'img/poison.png';
+      fruitImg.onload = this.cx.drawImage(fruitImg, this.fruitsArr[i].x, this.fruitsArr[i].y, this.elementsSize, this.elementsSize);
+      // this.cx.fillStyle = (this.fruitsArr[i].type === 'good') ? '#a60000' : '#8c730e';
+      // this.cx.fillRect(this.fruitsArr[i].x, this.fruitsArr[i].y, 20, 20);
     }
+    this.cx.restore();
 
     // draw obstacles
+    this.cx.save();
+    this.cx.shadowColor = '#000';
+    this.cx.shadowBlur = 10;
+    this.cx.shadowOffsetX = 0;
+    this.cx.shadowOffsetY = 0;
     this.obstaclesArr.forEach((obstacle) => {
-      this.cx.fillStyle = 'blue';
+      this.cx.fillStyle = '#fff';
       this.cx.fillRect(obstacle.x, obstacle.y, this.elementsSize, this.elementsSize);
     });
-
+    this.cx.restore();
     // draw snake
-    this.cx.strokeStyle = 'orange';
-    this.cx.fillStyle = 'black';
+
+    // body
+    this.cx.fillStyle = '#ffcc00';
     for (let i = 1; i < this.player.nodes.length; i += 1) {
-      if (i === this.player.nodes.length - 1) this.cx.fillStyle = 'darkgreen';
-      this.cx.strokeRect(this.player.nodes[i].x, this.player.nodes[i].y, this.elementsSize, this.elementsSize);
-      this.cx.fillRect(this.player.nodes[i].x, this.player.nodes[i].y, this.elementsSize, this.elementsSize);
+      if (i === this.player.nodes.length - 1) this.cx.fillStyle = '#ffcc00';
+      switch (this.player.nodes[i].direction.join('')) {
+        case 'upup':
+        case 'downdown':
+          this.cx.fillRect(this.player.nodes[i].x, this.player.nodes[i].y, this.elementsSize, this.elementsSize);
+          this.cx.lineWidth = 2;
+          this.cx.strokeStyle = '#1a1a1a';
+          this.cx.beginPath();
+          this.cx.moveTo(this.player.nodes[i].x, this.player.nodes[i].y + this.elementsSize / 2);
+          this.cx.lineTo(this.player.nodes[i].x + this.elementsSize, this.player.nodes[i].y + this.elementsSize / 2);
+          this.cx.stroke();
+          this.cx.closePath();
+          break;
+        case 'leftleft':
+        case 'rightright':
+          this.cx.fillRect(this.player.nodes[i].x, this.player.nodes[i].y, this.elementsSize, this.elementsSize);
+          this.cx.lineWidth = 2;
+          this.cx.strokeStyle = '#1a1a1a';
+          this.cx.beginPath();
+          this.cx.moveTo(this.player.nodes[i].x + this.elementsSize / 2, this.player.nodes[i].y);
+          this.cx.lineTo(this.player.nodes[i].x + this.elementsSize / 2, this.player.nodes[i].y + 20);
+          this.cx.stroke();
+          this.cx.closePath();
+          break;
+        case 'upleft':
+        case 'rightdown':
+          this.cx.beginPath();
+          this.cx.moveTo(this.player.nodes[i].x, this.player.nodes[i].y + this.elementsSize);
+          this.cx.arc(this.player.nodes[i].x, this.player.nodes[i].y + this.elementsSize, this.elementsSize, Math.PI * 1.5, 0, false);
+          this.cx.closePath();
+          this.cx.fill();
+          this.cx.lineWidth = 2;
+          this.cx.strokeStyle = '#1a1a1a';
+          this.cx.beginPath();
+          this.cx.moveTo(this.player.nodes[i].x, this.player.nodes[i].y + this.elementsSize);
+          this.cx.lineTo(this.player.nodes[i].x + this.elementsSize / 2 + 4, this.player.nodes[i].y + this.elementsSize / 2 - 4);
+          this.cx.stroke();
+          this.cx.closePath();
+          break;
+        case 'upright':
+        case 'leftdown':
+          this.cx.beginPath();
+          this.cx.moveTo(this.player.nodes[i].x + this.elementsSize, this.player.nodes[i].y + this.elementsSize);
+          this.cx.arc(this.player.nodes[i].x + this.elementsSize, this.player.nodes[i].y + this.elementsSize, this.elementsSize, Math.PI, Math.PI * 1.5, false);
+          this.cx.closePath();
+          this.cx.fill();
+          this.cx.lineWidth = 2;
+          this.cx.strokeStyle = '#1a1a1a';
+          this.cx.beginPath();
+          this.cx.moveTo(this.player.nodes[i].x + this.elementsSize, this.player.nodes[i].y + this.elementsSize);
+          this.cx.lineTo(this.player.nodes[i].x + this.elementsSize / 2 - 4, this.player.nodes[i].y + this.elementsSize / 2 - 4);
+          this.cx.stroke();
+          this.cx.closePath();
+          break;
+        case 'downleft':
+        case 'rightup':
+          this.cx.beginPath();
+          this.cx.moveTo(this.player.nodes[i].x, this.player.nodes[i].y);
+          this.cx.arc(this.player.nodes[i].x, this.player.nodes[i].y, this.elementsSize, 0, Math.PI / 2, false);
+          this.cx.closePath();
+          this.cx.fill();
+          this.cx.lineWidth = 2;
+          this.cx.strokeStyle = '#1a1a1a';
+          this.cx.beginPath();
+          this.cx.moveTo(this.player.nodes[i].x, this.player.nodes[i].y);
+          this.cx.lineTo(this.player.nodes[i].x + this.elementsSize / 2 + 4, this.player.nodes[i].y + this.elementsSize / 2 + 4);
+          this.cx.stroke();
+          this.cx.closePath();
+          break;
+        case 'downright':
+        case 'leftup':
+          this.cx.beginPath();
+          this.cx.moveTo(this.player.nodes[i].x + this.elementsSize, this.player.nodes[i].y);
+          this.cx.arc(this.player.nodes[i].x + this.elementsSize, this.player.nodes[i].y, this.elementsSize, Math.PI / 2, Math.PI, false);
+          this.cx.closePath();
+          this.cx.fill();
+          this.cx.lineWidth = 2;
+          this.cx.strokeStyle = '#1a1a1a';
+          this.cx.beginPath();
+          this.cx.moveTo(this.player.nodes[i].x + this.elementsSize, this.player.nodes[i].y);
+          this.cx.lineTo(this.player.nodes[i].x + this.elementsSize / 2 - 4, this.player.nodes[i].y + this.elementsSize / 2 + 4);
+          this.cx.stroke();
+          this.cx.closePath();
+          break;
+        default:
+          break;
+      }
     }
-    this.cx.fillStyle = 'pink';
-    this.cx.fillRect(this.player.nodes[0].x, this.player.nodes[0].y, this.elementsSize, this.elementsSize);
+
+    // head
+    this.cx.fillStyle = '#ffcc00';
+    this.cx.beginPath();
+    switch (this.player.nodes[0].direction[0]) {
+      case 'up':
+        if (this.player.nodes.length === 1) {
+          this.cx.moveTo(this.player.nodes[0].x + this.elementsSize / 2, this.player.nodes[0].y + this.elementsSize * 2);
+        }
+        this.cx.arc(this.player.nodes[0].x + this.elementsSize / 2, this.player.nodes[0].y + this.elementsSize, this.elementsSize / 2, Math.PI, Math.PI * 2, false);
+        break;
+      case 'down':
+        if (this.player.nodes.length === 1) {
+          this.cx.moveTo(this.player.nodes[0].x + this.elementsSize / 2, this.player.nodes[0].y - this.elementsSize);
+        }
+        this.cx.arc(this.player.nodes[0].x + this.elementsSize / 2, this.player.nodes[0].y, this.elementsSize / 2, 0, Math.PI, false);
+        break;
+      case 'left':
+        if (this.player.nodes.length === 1) {
+          this.cx.moveTo(this.player.nodes[0].x + this.elementsSize * 2, this.player.nodes[0].y + this.elementsSize / 2);
+        }
+        this.cx.arc(this.player.nodes[0].x + this.elementsSize, this.player.nodes[0].y + this.elementsSize / 2, this.elementsSize / 2, Math.PI / 2, Math.PI * 1.5, false);
+        break;
+      case 'right':
+        if (this.player.nodes.length === 1) {
+          this.cx.moveTo(this.player.nodes[0].x - this.elementsSize, this.player.nodes[0].y + this.elementsSize / 2);
+        }
+        this.cx.arc(this.player.nodes[0].x, this.player.nodes[0].y + this.elementsSize / 2, this.elementsSize / 2, Math.PI * 1.5, Math.PI / 2, false);
+        break;
+      default:
+        break;
+    }
+
+    this.cx.closePath();
+    this.cx.fillStyle = '#ffcc00';
+    this.cx.fill();
   }
 
-  // drawObstacles(arr) {
-  //   if (arr !== undefined) {
-  //     arr.forEach((obstacle) => {
-  //       this.cx.fillStyle = 'blue';
-  //       this.cx.fillRect(obstacle.x, obstacle.y, this.elementsSize, this.elementsSize);
-  //     });
-  //   }
-  // }
 
   drawScore() {
     this.cx.font = '35px Verdana';
@@ -177,6 +304,7 @@ class Game {
   }
 
   die() {
+    this.player.setNewPos();
     this.gameOver = true;
     clearInterval(this.update);
     this.draw();
@@ -196,7 +324,7 @@ class Game {
         if (!this.gameOver) {
           this.draw();
           // this.drawObstacles();
-          this.drawScore();
+          // this.drawScore();
         }
       }
     }
