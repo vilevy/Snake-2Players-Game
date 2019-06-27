@@ -1,4 +1,5 @@
 /* eslint-disable operator-linebreak */
+
 const canvas = document.querySelector('#main-canvas');
 const cx = canvas.getContext('2d');
 const canvasWidth = parseInt(canvas.getAttribute('width'), 10);
@@ -18,8 +19,8 @@ const snakeSize = 20;
 const fruitSize = 20;
 
 const fruitType = ['grow', 'grow', 'obstacle'];
-let randType;
 const fruitsArr = [];
+let randType;
 let randX;
 let randY;
 
@@ -59,8 +60,6 @@ class Snake {
       [this.direction] = this.commands;
       this.commands.shift();
     }
-    console.log(this.direction);
-    console.log(this.commands);
     switch (this.direction) {
       case 'up':
         this.size[0].y -= 20;
@@ -151,7 +150,6 @@ class Snake {
         (this.size[0].x) === obstaclesArr[i].x &&
         this.size[0].y === (obstaclesArr[i].y) &&
         (this.size[0].y) === obstaclesArr[i].y) {
-        // FAZER MAP  reatribuir pro this.size
         this.size = this.size.map(bodyNode => ({
           x: bodyNode.lastX,
           y: bodyNode.lastY,
@@ -179,7 +177,7 @@ class Snake {
   }
 }
 
-// CREATE FRUITS FUNCTION
+// CREATE FRUITS FUNCTION - método do game
 const createFruits = () => {
   // const randomNum = Math.floor(Math.random() * 6) + 4;
   for (let i = 0; i < 6; i += 1) {
@@ -213,7 +211,7 @@ const createFruits = () => {
   });
 };
 
-// DRAW OBSTACLES FUNCTION
+// DRAW OBSTACLES FUNCTION - método do game
 const drawObstacles = () => {
   obstaclesArr.forEach((obstacle) => {
     cx.fillStyle = 'blue';
@@ -221,18 +219,18 @@ const drawObstacles = () => {
   });
 };
 
-// DRAW SCORE
+// DRAW SCORE - método do game
 const drawScore = () => {
   cx.font = '35px Verdana';
   cx.fillStyle = '#ffcc00';
   cx.fillText(`Score: ${score}`, 15, 50);
 };
 
-// DRAW SNAKE AND FRUITS
+// CREATE SNAKE AND FRUITS - método do game / constrói no constructor
 const player1 = new Snake((canvasWidth / 2), (canvasHeight / 2), 'up');
 createFruits();
 
-// PUSH TO CONTAINSANYTHINGARR
+// PUSH TO CONTAINSANYTHINGARR - não precisa, mas seria método do game
 const checkPos = (arr) => {
   arr.forEach((element) => {
     containsAnythingArr.push([element.x, element.y]);
@@ -247,6 +245,7 @@ const checkPosAll = (arr1, arr2, arr3) => {
 
 
 // requestUpdate = window.requestAnimationFrame(updateCanvas);
+// método do game
 const updateCanvas = () => {
   if (gameStatus) {
     frames += 1;
@@ -276,7 +275,7 @@ const updateCanvas = () => {
   }
 };
 
-// KEYBOARD ACTIONS
+// KEYBOARD ACTIONS - método do game. É um método que recebe um keycode e faz a ação
 document.onkeydown = (e) => {
   switch (e.keyCode) {
     case 38:
@@ -303,7 +302,6 @@ document.onkeydown = (e) => {
       break;
   }
 };
-
 
 setInterval(updateCanvas, 16);
 

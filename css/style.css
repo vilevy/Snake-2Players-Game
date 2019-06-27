@@ -12,9 +12,10 @@ html, body {
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center;  
 }
 
-#main-canvas {
+canvas {
   border: 5px solid darkolivegreen;
+  margin: 0 10px;
 }
