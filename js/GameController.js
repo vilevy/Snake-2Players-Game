@@ -1,13 +1,16 @@
 /* eslint-disable max-len */
 class GameController {
   constructor() {
+    this.winnerContainer = document.querySelector('#winner-message');
     this.game1 = new Game('#first-canvas');
     this.game2 = new Game('#second-canvas');
-
+    this.winnerH2 = document.createElement('div');
+    this.winnerH2.innerHTML = '';
     this.endGame = false;
 
     this.score1Div = document.querySelector('#score1');
     this.score2Div = document.querySelector('#score2');
+    this.players = document.querySelectorAll('.player-container');
 
     // update
     this.update = setInterval(() => {
@@ -76,13 +79,47 @@ class GameController {
     };
   }
 
+  writeWinner() {
+    if (this.game1.gameOver && this.game2.gameOver) {
+      if (this.game1.score > this.game2.score) {
+        this.winnerH2.innerHTML = `PLAYER 1 WINS! <br> <span>${this.game1.score} x ${this.game2.score}</span>`;
+      } else if (this.game1.score < this.game2.score) {
+        this.winnerH2.innerHTML = `PLAYER 2 WINS! <br> <span>${this.game1.score} x ${this.game2.score}</span>`;
+      } else {
+        this.winnerH2.innerHTML = 'OH, YOU NEED ANOTHER ROUND!';
+      }
+      this.winnerContainer.insertBefore(this.winnerH2, this.winnerContainer.firstChild);
+      this.winnerContainer.setAttribute('style', 'display: flex');
+      this.score1Div.innerHTML = '';
+      // this.score1Div.parentNode.removeChild(this.score1Div);
+      // this.score2Div.parentNode.removeChild(this.score2Div);
+      // this.game1.canvas.parentNode.removeChild(this.game1.canvas);
+      // this.game2.canvas.parentNode.removeChild(this.game2.canvas);
+
+      // this.players[0].parentNode.removeChild(this.players[0]);
+      // this.players[1].parentNode.removeChild(this.players[1]);
+    }
+  }
+
   checkEndGame() {
     if (this.game1.gameOver && this.game2.gameOver) {
       clearInterval(this.update);
+      setTimeout(() => this.writeWinner(), 500);
     }
   }
 }
-const newGame = new GameController();
+
+// const newGame = () => new GameController();
+const btn = document.querySelector('button');
+
+btn.onclick = () => {
+  document.querySelector('#winner-message').setAttribute('style', 'display: none');
+  document.querySelector('#winner-message').innerHTML = '<button>New Game</button>';
+  document.querySelector('#winner-message').setAttribute('style', 'display: none');
+  setTimeout(() => new GameController(), 3000);
+};
+
+window.onload = () => new GameController();
 
 /* <div > Icons made by < a href = "https://www.flaticon.com/authors/darius-dan"
 title = "Darius Dan" > Darius Dan < /a> from <a href="https:/ / www.flaticon.com / "
