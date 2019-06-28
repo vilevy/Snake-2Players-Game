@@ -7,7 +7,7 @@ class Game {
     this.canvasWidth = parseInt(this.canvas.getAttribute('width'), 10);
     this.canvasHeight = parseInt(this.canvas.getAttribute('height'), 10);
 
-    this.gameStatus = true;
+    this.gameStatus = false;
     this.gameOver = false;
     this.frames = 0;
     this.speed = 5;
@@ -28,9 +28,6 @@ class Game {
     this.enemyFruitsArr = [];
     this.enemyFruitsCounter = 0;
     this.enemyObstaclesArr = [];
-
-    // this.image = new Image();
-    // this.image.src = './img/straight.png';
 
     // update
     this.update = setInterval(() => {
@@ -60,12 +57,16 @@ class Game {
     this.fruitsArr.splice(result[1], 1);
 
     if (result[0].type === 'good') {
+      const sound = new Audio('sounds/bip1.mp3');
+      sound.play();
       // const randX = Math.round(Math.random() * (this.canvasWidth - this.elementsSize) / this.elementsSize) * this.elementsSize;
       // const randY = Math.round(Math.random() * (this.canvasHeight - this.elementsSize) / this.elementsSize) * this.elementsSize;
       this.enemyFruitsCounter += 1;
     }
 
     if (result[0].type === 'bad') {
+      const sound = new Audio('sounds/bip2.mp3');
+      sound.play();
       const newObstacle = result[0];
       newObstacle.element = 'obstacle';
       // const randX = Math.round(Math.random() * (this.canvasWidth - this.elementsSize) / this.elementsSize) * this.elementsSize;
@@ -137,7 +138,7 @@ class Game {
     for (let i = 0; i < this.fruitsArr.length; i += 1) {
       const fruitImg = new Image();
       fruitImg.src = (this.fruitsArr[i].type === 'good') ? 'img/watermelon.png' : 'img/poison.png';
-      fruitImg.onload = this.cx.drawImage(fruitImg, this.fruitsArr[i].x, this.fruitsArr[i].y, this.elementsSize, this.elementsSize);
+      fruitImg.onload = this.cx.drawImage(fruitImg, this.fruitsArr[i].x, this.fruitsArr[i].y, this.elementsSize + 5, this.elementsSize + 5);
       // this.cx.fillStyle = (this.fruitsArr[i].type === 'good') ? '#a60000' : '#8c730e';
       // this.cx.fillRect(this.fruitsArr[i].x, this.fruitsArr[i].y, 20, 20);
     }
@@ -145,7 +146,7 @@ class Game {
 
     // draw obstacles
     this.obstaclesArr.forEach((obstacle) => {
-      this.cx.fillStyle = '#fff';
+      this.cx.fillStyle = '#737373';
       this.cx.fillRect(obstacle.x, obstacle.y, this.elementsSize, this.elementsSize);
     });
 
@@ -245,6 +246,7 @@ class Game {
 
     // head
     this.cx.fillStyle = '#ffcc00';
+    if (!this.gameStatus) this.cx.fillStyle = 'red';
     this.cx.beginPath();
     switch (this.player.nodes[0].direction[0]) {
       case 'up':
@@ -307,6 +309,8 @@ class Game {
   }
 
   die() {
+    const soundGameOver = new Audio('sounds/gameover.mp3');
+    soundGameOver.play();
     this.player.setNewPos();
     this.gameOver = true;
     clearInterval(this.update);
