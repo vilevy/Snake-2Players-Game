@@ -1,5 +1,5 @@
 # Snake 2 Players Game
-Based on the classical Snake Game. 2 players control each snake and try to feed them with watermelons found at random positions. The winner is the one that makes the biggest score before dying.
+Based on the classical Snake Game. 2 players control each snake and try to feed them with watermelons found at random positions. The winner is the one that makes the highest score before dying.
 
 ## How to Play
 ### Objective
