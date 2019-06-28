@@ -1,32 +1,93 @@
 /* eslint-disable max-len */
 class GameController {
   constructor() {
-    this.winnerContainer = document.querySelector('#winner-message');
-    this.game1 = new Game('#first-canvas');
-    this.game2 = new Game('#second-canvas');
-    this.winnerH2 = document.createElement('div');
-    this.winnerH2.innerHTML = '';
-    this.endGame = false;
+    // html structure
+    this.canvasContainer = document.querySelector('#canvas-container');
+    this.winnerMessage = document.createElement('div');
+    this.newGameBtn = document.createElement('button');
+    this.winnerH2 = document.createElement('h2');
+    this.playerContainer = '';
+    this.playerNum = '';
+    this.canvas = '';
+    this.scoreDiv = '';
+    this.playToStart = document.createElement('h4');
+    this.pauseText = document.createElement('h4');
 
-    this.score1Div = document.querySelector('#score1');
-    this.score2Div = document.querySelector('#score2');
-    this.players = document.querySelectorAll('.player-container');
+    // create canvas
+    this.createCanvasStructure();
+
+    this.soundtrack = new Audio('sounds/fun_level_(underscore)_proud_music_preview.mp3');
+
+ 
+    // create players game
+    this.game1 = new Game('#canvas1');
+    this.game2 = new Game('#canvas2');
 
     // update
     this.update = setInterval(() => {
       this.commands();
       this.checkEnemiesFruits();
-      this.score1Div.innerHTML = this.game1.score;
-      this.score2Div.innerHTML = this.game2.score;
-      // this.drawObstaclesBothGames();
+      document.querySelector('#score1').innerHTML = this.game1.score;
+      document.querySelector('#score2').innerHTML = this.game2.score;
       this.checkEndGame();
     }, 16);
   }
 
-  // drawObstaclesBothGames() {
-  //   this.game1.drawObstacles(this.game2.obstaclesArr);
-  //   this.game2.drawObstacles(this.game1.obstaclesArr);
-  // }
+  createMessageStructure() {
+    this.canvasContainer.append(this.winnerMessage);
+    this.winnerMessage.setAttribute('id', 'winner-message');
+    this.winnerMessage.append(this.winnerH2);
+    this.winnerMessage.append(this.newGameBtn);
+    this.newGameBtn.innerHTML = 'New Game';
+    this.newGameBtn.onclick = () => {
+      this.removeCanvasStructure();
+      setTimeout(() => new GameController(), 10);
+    }
+  }
+
+  createCanvasStructure() {
+    this.canvasContainer.appendChild(this.playToStart);
+    this.playToStart.innerHTML = 'Press spacebar to start';
+    for (let i = 1; i <= 2; i += 1) {
+      this.playerContainer = document.createElement('div');
+      this.canvasContainer.append(this.playerContainer);
+      this.playerContainer.setAttribute('class', 'player-container');
+      this.playerNum = document.createElement('h3');
+      this.playerContainer.append(this.playerNum);
+      this.playerNum.innerHTML = `Player ${i}`;
+      this.canvas = document.createElement('canvas');
+      this.playerContainer.append(this.canvas);
+      this.canvas.setAttribute('id', `canvas${i}`);
+      this.canvas.setAttribute('width', '400px');
+      this.canvas.setAttribute('height', '600px');
+      this.scoreDiv = document.createElement('div');
+      this.playerContainer.append(this.scoreDiv);
+      this.scoreDiv.setAttribute('id', `score${i}`);
+    }
+  }
+
+  removeCanvasStructure() {
+    this.canvasContainer.innerHTML = '';
+  }
+
+  writeWinner() {
+    const sound = new Audio('sounds/cartoon_success.mp3');
+    sound.play();
+    if (this.game1.gameOver && this.game2.gameOver) {
+      if (this.game1.score > this.game2.score) {
+        this.winnerH2.innerHTML = `PLAYER 1 WINS!<br><span>${this.game1.score} x ${this.game2.score}</span>`;
+      } else if (this.game1.score < this.game2.score) {
+        this.winnerH2.innerHTML = `PLAYER 2 WINS!<br><span>${this.game1.score} x ${this.game2.score}</span>`;
+      } else {
+        this.winnerH2.innerHTML = 'OH, YOU NEED ANOTHER ROUND!<br><span>Prove you are better!</span>';
+      }
+    }
+  }
+
+  drawPause() {
+    document.body.insertBefore(this.pauseText, document.body.firstChild);
+    this.pauseText.innerHTML = '&#9646;&#9646<br>press spacebar to release';
+  }
 
   checkEnemiesFruits() {
     if (this.game1.enemyFruitsCounter > 0) {
@@ -72,6 +133,15 @@ class GameController {
         case 32:
           this.game1.gameStatus = !this.game1.gameStatus;
           this.game2.gameStatus = !this.game2.gameStatus;
+          this.playToStart.remove();
+          if (this.game1.gameStatus === false && this.game2.gameStatus === false) {
+            this.drawPause();
+            this.soundtrack.pause();
+          }
+          if (this.game1.gameStatus === true && this.game2.gameStatus === true && (this.game1.gameOver === false || this.game2.gameOver === false)) {
+            this.pauseText.remove();
+            this.soundtrack.play();
+          }
           break;
         default:
           break;
@@ -79,45 +149,17 @@ class GameController {
     };
   }
 
-  writeWinner() {
-    if (this.game1.gameOver && this.game2.gameOver) {
-      if (this.game1.score > this.game2.score) {
-        this.winnerH2.innerHTML = `PLAYER 1 WINS! <br> <span>${this.game1.score} x ${this.game2.score}</span>`;
-      } else if (this.game1.score < this.game2.score) {
-        this.winnerH2.innerHTML = `PLAYER 2 WINS! <br> <span>${this.game1.score} x ${this.game2.score}</span>`;
-      } else {
-        this.winnerH2.innerHTML = 'OH, YOU NEED ANOTHER ROUND!';
-      }
-      this.winnerContainer.insertBefore(this.winnerH2, this.winnerContainer.firstChild);
-      this.winnerContainer.setAttribute('style', 'display: flex');
-      this.score1Div.innerHTML = '';
-      // this.score1Div.parentNode.removeChild(this.score1Div);
-      // this.score2Div.parentNode.removeChild(this.score2Div);
-      // this.game1.canvas.parentNode.removeChild(this.game1.canvas);
-      // this.game2.canvas.parentNode.removeChild(this.game2.canvas);
-
-      // this.players[0].parentNode.removeChild(this.players[0]);
-      // this.players[1].parentNode.removeChild(this.players[1]);
-    }
-  }
 
   checkEndGame() {
     if (this.game1.gameOver && this.game2.gameOver) {
       clearInterval(this.update);
-      setTimeout(() => this.writeWinner(), 500);
+      this.soundtrack.pause();
+      setTimeout(() => this.removeCanvasStructure(), 100);
+      setTimeout(() => this.createMessageStructure(), 110);
+      setTimeout(() => this.writeWinner(), 120);
     }
   }
 }
-
-// const newGame = () => new GameController();
-const btn = document.querySelector('button');
-
-btn.onclick = () => {
-  document.querySelector('#winner-message').setAttribute('style', 'display: none');
-  document.querySelector('#winner-message').innerHTML = '<button>New Game</button>';
-  document.querySelector('#winner-message').setAttribute('style', 'display: none');
-  setTimeout(() => new GameController(), 3000);
-};
 
 window.onload = () => new GameController();
 
