@@ -137,7 +137,7 @@ class Game {
     this.cx.shadowOffsetY = 10;
     for (let i = 0; i < this.fruitsArr.length; i += 1) {
       const fruitImg = new Image();
-      fruitImg.src = (this.fruitsArr[i].type === 'good') ? 'img/watermelon.png' : 'img/poison.png';
+      fruitImg.src = (this.fruitsArr[i].type === 'good') ? 'img/watermelon-2.png' : 'img/poison.png';
       fruitImg.onload = this.cx.drawImage(fruitImg, this.fruitsArr[i].x, this.fruitsArr[i].y, this.elementsSize + 5, this.elementsSize + 5);
       // this.cx.fillStyle = (this.fruitsArr[i].type === 'good') ? '#a60000' : '#8c730e';
       // this.cx.fillRect(this.fruitsArr[i].x, this.fruitsArr[i].y, 20, 20);
@@ -146,16 +146,16 @@ class Game {
 
     // draw obstacles
     this.obstaclesArr.forEach((obstacle) => {
-      this.cx.fillStyle = '#737373';
+      this.cx.fillStyle = '#1d1d1d';
       this.cx.fillRect(obstacle.x, obstacle.y, this.elementsSize, this.elementsSize);
     });
 
     // draw snake
 
     // body
-    this.cx.fillStyle = '#ffcc00';
+    this.cx.fillStyle = '#f5563e';
     for (let i = 1; i < this.player.nodes.length; i += 1) {
-      if (i === this.player.nodes.length - 1) this.cx.fillStyle = '#ffcc00';
+      if (i === this.player.nodes.length - 1) this.cx.fillStyle = '#f5563e';
       switch (this.player.nodes[i].direction.join('')) {
         case 'upup':
         case 'downdown':
@@ -245,7 +245,7 @@ class Game {
     }
 
     // head
-    this.cx.fillStyle = '#ffcc00';
+    this.cx.fillStyle = '#f5563e';
     if (!this.gameStatus) this.cx.fillStyle = 'red';
     this.cx.beginPath();
     switch (this.player.nodes[0].direction[0]) {
@@ -278,14 +278,14 @@ class Game {
     }
 
     this.cx.closePath();
-    this.cx.fillStyle = '#ffcc00';
+    this.cx.fillStyle = '#f5563e';
     this.cx.fill();
   }
 
 
   drawScore() {
     this.cx.font = '35px Verdana';
-    this.cx.fillStyle = '#ffcc00';
+    this.cx.fillStyle = '#f5563e';
     this.cx.fillText(`Score: ${this.score}`, 15, 50);
   }
 
@@ -299,7 +299,7 @@ class Game {
     // this.cx.fillStyle = '#fff';
     // this.cx.fillText('Player 1', this.canvasWidth / 2, 100);
     this.cx.font = '30px Rubik Mono One';
-    this.cx.fillStyle = '#ffcc00';
+    this.cx.fillStyle = '#f5563e';
     this.cx.fillText('FINAL SCORE:', this.canvasWidth / 2, this.canvasHeight / 2 - 30);
     this.cx.fillText(this.score, this.canvasWidth / 2, this.canvasHeight / 2 + 15);
   }

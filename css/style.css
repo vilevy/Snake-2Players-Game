@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Rubik+Mono+One&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
 
 * {
   margin: 0;
@@ -8,36 +9,101 @@
 
 html, body {
   height: 100%;
-  font-family: 'Rubik Mono One', sans-serif;
 }
 
 
 body {
-  background: #737373;
+  background: #1d1d1d;
+}
+
+#header-logo {
+  display: block;
+  margin: 0 auto;
+  padding-top: 2rem;
+  width: 300px;
+}
+
+#instructions {
+  position: absolute;
+  top: 0;
+  font-family: 'Open Sans', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  align-items: center;
+  color: #fff;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#rules {
+  padding-bottom: 2rem;
+  margin-bottom: 1rem;
+  border-bottom: 3px solid #fff;
+}
+
+#instructions p {
+  margin: .3rem 0;
+  font-size: 1.5rem;
+}
+
+#game-controls {
+  display: flex;
+}
+
+#game-controls li {
+  list-style: none;
+  margin: .3rem 0;
+}
+
+.controls-player {
+  margin: 1rem 2rem;
+}
+
+b {
+  margin-right: .5rem;
+}
+
+h5 {
+  font-size: 4rem;
+  color: #f5563e;
+  font-family: 'Rubik Mono One', sans-serif;  
+}
+
+h6 {
+  font-size: 1rem;
+  color: #f5563e;
+  font-family: 'Rubik Mono One', sans-serif;  
+}
+
+#start-btn {
+margin-top: 2rem;
 }
 
 #canvas-container {
+  position: absolute;
+  top: 0;
   height: 100%;
-  display: flex;
+  width: 100%;;
   justify-content: center;
   align-items: center;  
-  position: relative;
+  display: none;
+  font-family: 'Rubik Mono One', sans-serif;
 }
 
 canvas {
-  /* border: 5px solid darkolivegreen; */
   margin: 0 1rem;
-  background: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('../img/grass-bg.jpg');
+  background: linear-gradient(rgba(0, 0, 0, .3), rgba(0, 0, 0, .3)), url('../img/grass-bg.jpg');
 }
 
 #score1, #score2 {
-  /* position: absolute; */
-  /* bottom: 0; */
   width: 400px;
   margin: .5rem 1rem;
   padding: .8rem;
   background: #000;
-  color: #ffcc00;
+  color: #f5563e;
   font-size: 1.5rem;
 }
 
@@ -45,12 +111,12 @@ canvas {
   display: flex;
   flex-direction: column;
   text-align: center;
+  padding-top: 10rem;
 }
 
 h3 {
   color: #fff;
   margin: 0 auto;
-  /* width: 60%; */
   padding: 1rem 3rem;
   border: 1px solid #fff;
   border-bottom: 0;
@@ -72,10 +138,10 @@ h3 {
   text-align: center;
 }
 
-#winner-message button {
+#winner-message button, #start-btn {
   padding: .5rem 1rem;
   font-family: 'Rubik Mono One', sans-serif;
-  border: 1px solid #ffcc00;
+  border: 1px solid #f5563e;
   background: #fff;
   font-size: 20px;
   margin-top: 2rem;
@@ -83,15 +149,15 @@ h3 {
   transition: .3s ease;
 }
 
-#winner-message button:hover {
-  background: #ffcc00;
+#winner-message button:hover, #start-btn:hover {
+  background: #f5563e;
   color: '#fff';
   cursor: pointer;
   transform: scale(1.1);
   transition: .1s ease;
 }
 
-#winner-message button:active, #winner-message button:focus {
+#winner-message button:active, #winner-message button:focus, #start-btn:active, #start-btn:focus {
   outline:none;
 }
 
@@ -112,22 +178,11 @@ h4 {
   z-index: 2;
 }
 
-/* h4 span {
-  font-size: 2rem;
-  display: block;
-} */
-
 h2 {
   font-size: 4rem;
 }
 
 h2 span {
-  color: #ffcc00;
+  color: #f5563e;
   font-size: 2rem;
-}
-
-#header-logo {
-  position: absolute;
-  margin: 30px;
-  width: 300px;
 }
