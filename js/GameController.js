@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 class GameController {
   constructor() {
     // html structure
