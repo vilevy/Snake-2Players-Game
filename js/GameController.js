@@ -12,14 +12,16 @@ class GameController {
     this.scoreDiv = '';
     this.playToStart = document.createElement('h4');
     this.pauseText = document.createElement('h4');
+    this.aside = document.querySelector('aside');
+    this.muteBtn = document.querySelector('#mute-btn');
 
     // create canvas
     this.createCanvasStructure();
 
     this.soundtrack = new Audio('sounds/251461__joshuaempyre__arcade-music-loop.wav');
     this.soundtrack.loop = true;
+    this.soundWinner = new Audio('sounds/cartoon_success.mp3');
 
- 
     // create players game
     this.game1 = new Game('#canvas1');
     this.game2 = new Game('#canvas2');
@@ -31,6 +33,7 @@ class GameController {
       document.querySelector('#score1').innerHTML = this.game1.score;
       document.querySelector('#score2').innerHTML = this.game2.score;
       this.checkEndGame();
+      this.asideButtons();
     }, 16);
   }
 
@@ -43,7 +46,7 @@ class GameController {
     this.newGameBtn.onclick = () => {
       this.removeCanvasStructure();
       setTimeout(() => new GameController(), 10);
-    }
+    };
   }
 
   createCanvasStructure() {
@@ -72,9 +75,36 @@ class GameController {
     this.canvasContainer.innerHTML = '';
   }
 
+  asideButtons() {
+    if (this.canvasContainer.style.display === 'flex') this.aside.style.transform = 'translate(0, -50%)';
+    this.muteBtn.onclick = () => {
+      this.muteBtn.classList.toggle('active');
+      if (this.muteBtn.classList.contains('active')) {
+        this.muteBtn.innerHTML = 'UNMUTE';
+        this.soundtrack.muted = true;
+        this.game1.soundGameOver.muted = true;
+        this.game2.soundGameOver.muted = true;
+        this.game1.soundGoodEat.muted = true;
+        this.game2.soundGoodEat.muted = true;
+        this.game1.soundBadEat.muted = true;
+        this.game2.soundBadEat.muted = true;
+        this.soundWinner.muted = true;
+      } else {
+        this.muteBtn.innerHTML = 'MUTE';
+        this.soundtrack.muted = false;
+        this.game1.soundGameOver.muted = false;
+        this.game2.soundGameOver.muted = false;
+        this.game1.soundGoodEat.muted = false;
+        this.game2.soundGoodEat.muted = false;
+        this.game1.soundBadEat.muted = false;
+        this.game2.soundBadEat.muted = false;
+        this.soundWinner.muted = false;
+      }
+    };
+  }
+
   writeWinner() {
-    const sound = new Audio('sounds/cartoon_success.mp3');
-    sound.play();
+    if (this.soundWinner.muted === false) this.soundWinner.play();
     if (this.game1.gameOver && this.game2.gameOver) {
       if (this.game1.score > this.game2.score) {
         this.winnerH2.innerHTML = `PLAYER 1 WINS!<br><span>${this.game1.score} x ${this.game2.score}</span>`;
@@ -169,9 +199,3 @@ startBtn.onclick = () => {
   instructions.style.display = 'none';
   new GameController();
 };
-// window.onload = () => new GameController();
-
-/* <div > Icons made by < a href = "https://www.flaticon.com/authors/darius-dan"
-title = "Darius Dan" > Darius Dan < /a> from <a href="https:/ / www.flaticon.com / "
-title="Flaticon ">www.flaticon.com</a> is licensed by <a href="http: //creativecommons.org/licenses/by/3.0/"
-title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div> */
