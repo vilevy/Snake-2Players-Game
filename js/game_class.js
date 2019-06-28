@@ -14,6 +14,10 @@ class Game {
     this.score = 0;
     this.elementsSize = 20;
 
+    // audio
+    this.soundGameOver = new Audio('sounds/gameover.mp3');
+    this.soundBadEat = new Audio('sounds/bip2.mp3');
+    this.soundGoodEat = new Audio('sounds/bip1.mp3');
 
     // player elements
     this.player = new Snake((this.canvasWidth / 2), (this.canvasHeight / 2), this.elementsSize, this.canvasWidth, this.canvasHeight);
@@ -57,29 +61,20 @@ class Game {
     this.fruitsArr.splice(result[1], 1);
 
     if (result[0].type === 'good') {
-      const sound = new Audio('sounds/bip1.mp3');
-      sound.play();
-      // const randX = Math.round(Math.random() * (this.canvasWidth - this.elementsSize) / this.elementsSize) * this.elementsSize;
-      // const randY = Math.round(Math.random() * (this.canvasHeight - this.elementsSize) / this.elementsSize) * this.elementsSize;
+      if (this.soundGameOver.muted === false) this.soundGoodEat.play();
       this.enemyFruitsCounter += 1;
     }
 
     if (result[0].type === 'bad') {
-      const sound = new Audio('sounds/bip2.mp3');
-      sound.play();
+      if (this.soundGameOver.muted === false) this.soundBadEat.play();
       const newObstacle = result[0];
       newObstacle.element = 'obstacle';
-      // const randX = Math.round(Math.random() * (this.canvasWidth - this.elementsSize) / this.elementsSize) * this.elementsSize;
-      // const randY = Math.round(Math.random() * (this.canvasHeight - this.elementsSize) / this.elementsSize) * this.elementsSize;
       this.obstaclesArr.push(newObstacle);
     }
 
-    // this.player.nodes[this.player.nodes.length - 1].type = 'body';
     this.player.nodes.push(result[0]);
     this.player.nodes[this.player.nodes.length - 1].type = 'tail';
     this.player.nodes[this.player.nodes.length - 1].direction = [this.player.direction];
-    // const newObs = { x: result[0].x, y: result[0].y, element: 'obstacle' };
-    // this.obstaclesArr.push(newObs);
     this.score += 10;
   }
 
@@ -139,8 +134,6 @@ class Game {
       const fruitImg = new Image();
       fruitImg.src = (this.fruitsArr[i].type === 'good') ? 'img/watermelon-2.png' : 'img/poison.png';
       fruitImg.onload = this.cx.drawImage(fruitImg, this.fruitsArr[i].x, this.fruitsArr[i].y, this.elementsSize + 5, this.elementsSize + 5);
-      // this.cx.fillStyle = (this.fruitsArr[i].type === 'good') ? '#a60000' : '#8c730e';
-      // this.cx.fillRect(this.fruitsArr[i].x, this.fruitsArr[i].y, 20, 20);
     }
     this.cx.restore();
 
@@ -291,13 +284,9 @@ class Game {
 
 
   showGameScore() {
-    // setTimeout(this.clearCanvas(), 2000);
     this.cx.fillStyle = 'rgba(0, 0, 0, 0.65)';
     this.cx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-    // this.cx.font = '22px Rubik Mono One';
     this.cx.textAlign = 'center';
-    // this.cx.fillStyle = '#fff';
-    // this.cx.fillText('Player 1', this.canvasWidth / 2, 100);
     this.cx.font = '30px Rubik Mono One';
     this.cx.fillStyle = '#f5563e';
     this.cx.fillText('FINAL SCORE:', this.canvasWidth / 2, this.canvasHeight / 2 - 30);
@@ -309,8 +298,7 @@ class Game {
   }
 
   die() {
-    const soundGameOver = new Audio('sounds/gameover.mp3');
-    soundGameOver.play();
+    if (this.soundGameOver.muted === false) this.soundGameOver.play();
     this.player.setNewPos();
     this.gameOver = true;
     clearInterval(this.update);
@@ -330,22 +318,8 @@ class Game {
         this.checkCollision();
         if (!this.gameOver) {
           this.draw();
-          // this.drawObstacles();
-          // this.drawScore();
         }
       }
     }
   }
 }
-
-// const game = new Game('#first-canvas');
-// const game2 = new Game('#second-canvas');
-// setInterval(game.updateCanvas(), 16);
-
-// setInterval(game2.updateCanvas(), 16);
-
-// console.log(game.gameStatus);
-// console.log(game.player.nodes[game.player.nodes.length - 1].type);
-
-// console.log(game2);
-// console.log(game.elementsSize);

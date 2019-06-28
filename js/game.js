@@ -26,8 +26,6 @@ let randY;
 
 const obstaclesArr = [];
 
-// let requestUpdate;
-
 class Fruits {
   constructor(x, y, type) {
     this.x = x;
