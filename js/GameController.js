@@ -77,28 +77,31 @@ class GameController {
 
   asideButtons() {
     if (this.canvasContainer.style.display === 'flex') this.aside.style.transform = 'translate(0, -50%)';
+    if (this.muteBtn.innerHTML === 'UNMUTE') {
+      this.soundtrack.muted = true;
+      this.game1.soundGameOver.muted = true;
+      this.game2.soundGameOver.muted = true;
+      this.game1.soundGoodEat.muted = true;
+      this.game2.soundGoodEat.muted = true;
+      this.game1.soundBadEat.muted = true;
+      this.game2.soundBadEat.muted = true;
+      this.soundWinner.muted = true;
+    } else {
+      this.soundtrack.muted = false;
+      this.game1.soundGameOver.muted = false;
+      this.game2.soundGameOver.muted = false;
+      this.game1.soundGoodEat.muted = false;
+      this.game2.soundGoodEat.muted = false;
+      this.game1.soundBadEat.muted = false;
+      this.game2.soundBadEat.muted = false;
+      this.soundWinner.muted = false;
+    }
     this.muteBtn.onclick = () => {
       this.muteBtn.classList.toggle('active');
       if (this.muteBtn.classList.contains('active')) {
         this.muteBtn.innerHTML = 'UNMUTE';
-        this.soundtrack.muted = true;
-        this.game1.soundGameOver.muted = true;
-        this.game2.soundGameOver.muted = true;
-        this.game1.soundGoodEat.muted = true;
-        this.game2.soundGoodEat.muted = true;
-        this.game1.soundBadEat.muted = true;
-        this.game2.soundBadEat.muted = true;
-        this.soundWinner.muted = true;
       } else {
         this.muteBtn.innerHTML = 'MUTE';
-        this.soundtrack.muted = false;
-        this.game1.soundGameOver.muted = false;
-        this.game2.soundGameOver.muted = false;
-        this.game1.soundGoodEat.muted = false;
-        this.game2.soundGoodEat.muted = false;
-        this.game1.soundBadEat.muted = false;
-        this.game2.soundBadEat.muted = false;
-        this.soundWinner.muted = false;
       }
     };
   }
