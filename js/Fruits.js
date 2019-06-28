@@ -4,10 +4,5 @@ class Fruits {
     this.y = y;
     this.type = type;
     this.element = 'fruit';
-    // this.checkElement();
   }
-
-  // checkElement() {
-  //   this.element = this.type === 'good' ? 'fruit' : 'obstacle';
-  // }
 }

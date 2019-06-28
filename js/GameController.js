@@ -16,7 +16,8 @@ class GameController {
     // create canvas
     this.createCanvasStructure();
 
-    this.soundtrack = new Audio('sounds/fun_level_(underscore)_proud_music_preview.mp3');
+    this.soundtrack = new Audio('sounds/251461__joshuaempyre__arcade-music-loop.wav');
+    this.soundtrack.loop = true;
 
  
     // create players game
@@ -46,6 +47,7 @@ class GameController {
   }
 
   createCanvasStructure() {
+    this.canvasContainer.style.display = 'flex';
     this.canvasContainer.appendChild(this.playToStart);
     this.playToStart.innerHTML = 'Press spacebar to start';
     for (let i = 1; i <= 2; i += 1) {
@@ -161,7 +163,13 @@ class GameController {
   }
 }
 
-window.onload = () => new GameController();
+const startBtn = document.querySelector('#start-btn');
+const instructions = document.querySelector('#instructions');
+startBtn.onclick = () => {
+  instructions.style.display = 'none';
+  new GameController();
+};
+// window.onload = () => new GameController();
 
 /* <div > Icons made by < a href = "https://www.flaticon.com/authors/darius-dan"
 title = "Darius Dan" > Darius Dan < /a> from <a href="https:/ / www.flaticon.com / "
