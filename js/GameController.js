@@ -168,11 +168,11 @@ class GameController {
           this.game1.gameStatus = !this.game1.gameStatus;
           this.game2.gameStatus = !this.game2.gameStatus;
           this.playToStart.remove();
-          if (this.game1.gameStatus === false && this.game2.gameStatus === false) {
+          if (!this.game1.gameStatus && !this.game2.gameStatus && (!this.game1.gameOver || !this.game2.gameOver)) {
             this.drawPause();
             this.soundtrack.pause();
           }
-          if (this.game1.gameStatus === true && this.game2.gameStatus === true && (this.game1.gameOver === false || this.game2.gameOver === false)) {
+          if (this.game1.gameStatus && this.game2.gameStatus && (!this.game1.gameOver || !this.game2.gameOver)) {
             this.pauseText.remove();
             this.soundtrack.play();
           }
